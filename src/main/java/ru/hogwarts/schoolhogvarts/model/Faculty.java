@@ -1,0 +1,4 @@
+package ru.hogwarts.schoolhogvarts.model;
+
+public class Faculty {
+}
