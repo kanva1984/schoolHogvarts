@@ -2,53 +2,51 @@ package ru.hogwarts.schoolhogvarts.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.schoolhogvarts.model.Student;
+import ru.hogwarts.schoolhogvarts.repository.StudentRepository;
 import ru.hogwarts.schoolhogvarts.service.StudentService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
+    private final StudentRepository studentRepository;
 
-    private static long counter = 0;
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
 
     @Override
     public Student add(Student student) {
-        student.setId(++counter);
-        students.put(student.getId(), student);
-        return students.get(student.getId());
+        return studentRepository.save(student);
     }
 
     @Override
     public Student get(Long id) {
-        return students.get(id);
+
+        return studentRepository.findById(id)
+                .orElse(null);
     }
 
     @Override
     public Student update(Long id, Student student) {
-        Student savedStudent = students.get(id);
-        if (savedStudent == null) {
+        Student studentFromDB = get(id);
+        if (studentFromDB == null) {
             return null;
         }
-        savedStudent.setAge(student.getAge());
-        savedStudent.setName(student.getName());
-
-        return savedStudent;
+        studentFromDB.setName(student.getName());
+        studentFromDB.setAge(student.getAge());
+        return studentRepository.save(studentFromDB);
     }
 
     @Override
     public void remove(Long id) {
-        students.remove(id);
+
+        studentRepository.deleteById(id);
     }
 
     @Override
     public List<Student> getStudentByAge(int age) {
-        return students.values()
-                .stream()
-                .filter(it -> it.getAge() == age)
-                .collect(Collectors.toList());
+        return studentRepository.findByAge(age);
     }
 }

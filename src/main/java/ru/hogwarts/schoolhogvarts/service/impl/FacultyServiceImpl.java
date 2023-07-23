@@ -3,53 +3,51 @@ package ru.hogwarts.schoolhogvarts.service.impl;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.schoolhogvarts.model.Faculty;
 import ru.hogwarts.schoolhogvarts.model.Student;
+import ru.hogwarts.schoolhogvarts.repository.FacultyRepository;
 import ru.hogwarts.schoolhogvarts.service.FacultyService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private static long counter = 0;
+    private final FacultyRepository facultyRepository;
+
+    public FacultyServiceImpl(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
 
     @Override
     public Faculty add(Faculty faculty) {
-        faculty.setId(++counter);
-        faculties.put(faculty.getId(), faculty);
-        return faculties.get(faculty.getId());
+
+        return facultyRepository.save(faculty);
     }
 
     @Override
     public Faculty get(Long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).orElse(null);
     }
 
     @Override
     public Faculty update(Long id, Faculty faculty) {
-        Faculty savedFaculty = faculties.get(id);
-        if (savedFaculty == null) {
+        Faculty facultyFromDB = get(id);
+        if (facultyFromDB == null) {
             return null;
         }
-        savedFaculty.setColor(faculty.getColor());
-        savedFaculty.setName(faculty.getName());
-
-        return savedFaculty;
+        facultyFromDB.setName(faculty.getName());
+        facultyFromDB.setColor(faculty.getColor());
+        return facultyRepository.save(facultyFromDB);
     }
 
     @Override
     public void remove(Long id) {
+        facultyRepository.findById(id);
 
     }
 
     @Override
     public List<Faculty> getFacultyByColor(String color) {
-        return faculties.values()
-                .stream()
-                .filter(it -> it.getColor().equals(color))
-                .collect(Collectors.toList());
+        return facultyRepository.findByColor(color);
     }
 }
