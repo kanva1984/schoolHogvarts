@@ -30,23 +30,23 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public void uploadAvatar(Long studentId, MultipartFile avatarFile) {
+    public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
         Student student = studentRepository.findById(studentId).orElseThrow();
 
         Path path = saveToDisk(student, avatarFile);
-        saveToDb(student, avatarFile, path);
+        saveToDb(student, avatarFile, path, studentId);
     }
 
     @Override
-    public Avatar findAvatar(Long avatarId) {
+    public Avatar findAvatar(Long avatarId, Long studentId) {
         return avatarRepository
                 .findByStudent_id(studentId)
-                .orElse(new Avatar());;
+                .orElse(new Avatar());
     }
 
 
-    private void saveToDb(Student student, MultipartFile avatarFile, Path filePath) throws IOException {
-        Avatar avatar = findAvatar(student.getId());
+    private void saveToDb(Student student, MultipartFile avatarFile, Path filePath, Long studentId) throws IOException {
+        Avatar avatar = findAvatar(student.getId(), studentId);
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(avatarFile.getSize());

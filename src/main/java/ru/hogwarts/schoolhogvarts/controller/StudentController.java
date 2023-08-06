@@ -83,7 +83,7 @@ public class StudentController {
 
     @GetMapping(value = "/{studentId}/avatar-from-db")
     public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long studentId) {
-        Avatar avatar = avatarService.findAvatar(studentId);
+        Avatar avatar = avatarService.findAvatar(studentId, studentId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
         headers.setContentLength(avatar.getData().length);
@@ -95,7 +95,7 @@ public class StudentController {
             @PathVariable Long studentId,
             HttpServletResponse response
     ) throws IOException {
-        Avatar avatar = avatarService.findAvatar(studentId);
+        Avatar avatar = avatarService.findAvatar(studentId, studentId);
         Path path = Path.of(avatar.getFilePath());
         try (InputStream is = Files.newInputStream(path);
              OutputStream os = response.getOutputStream();) {
