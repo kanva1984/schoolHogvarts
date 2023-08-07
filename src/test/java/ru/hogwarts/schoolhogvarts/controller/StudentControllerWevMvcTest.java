@@ -17,6 +17,8 @@ import ru.hogwarts.schoolhogvarts.model.Student;
 import ru.hogwarts.schoolhogvarts.service.AvatarService;
 import ru.hogwarts.schoolhogvarts.service.StudentService;
 
+import java.util.List;
+
 import static org.apache.logging.log4j.CloseableThreadContext.put;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -109,10 +111,10 @@ public class StudentControllerWevMvcTest {
 
         Long studentId = 1L;
 
-        ResultActions resultActions = mockMvc.perform(delete("/students/" + studentId)
+        ResultActions resultActions = mockMvc.perform(delete("/students/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                );
+        );
 
         resultActions
                 .andExpect(status().isOk())
@@ -122,18 +124,18 @@ public class StudentControllerWevMvcTest {
     }
 
     @Test
-    void shouldReturnFaculty() throws Exception{
+    void shouldReturnFaculty() throws Exception {
 
         Long studentId = 1L;
-        String green;
-        Faculty faculty = new Faculty(1L, "Griffindor", green);
+
+        Faculty faculty = new Faculty(1L, "Gryffindor", "green");
 
         when(studentService.getFacultyByStudent(studentId)).thenReturn(faculty);
 
         ResultActions resultActions = mockMvc.perform(get("/students/" + studentId + "/faculty")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                );
+        );
 
         resultActions
                 .andExpect((ResultMatcher) jsonPath("$.id").value(faculty.getId()))
@@ -143,6 +145,49 @@ public class StudentControllerWevMvcTest {
 
 
     }
+
+    @Test
+    void shouldGetStudentsByAge() throws Exception {
+        Student student = new Student(1L, "Harry Potter", 20);
+
+
+        when(studentService.getStudentByAge(student.getAge())).thenReturn((List<Student>) student);
+
+        ResultActions resultActions = mockMvc.perform(get("/students/age")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect((ResultMatcher) jsonPath("$.id").value(student.getId()))
+                .andExpect((ResultMatcher) jsonPath("$.name").value(student.getName()))
+                .andExpect((ResultMatcher) jsonPath("$.age").value(student.getAge()))
+                .andDo(print());
+    }
+
+    @Test
+    void shouldFindByAgeBetween() throws Exception {
+        Student student = new Student(1L, "Harry Potter", 20);
+        int min = 10;
+        int max = 25;
+
+
+        when(studentService.findStudentByAgeBetween(min, max)).thenReturn((List<Student>) student);
+
+        ResultActions resultActions = mockMvc.perform(get("/students/by_age_between")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.id").value(student.getId()))
+                .andExpect((ResultMatcher) jsonPath("$.name").value(student.getName()))
+                .andExpect((ResultMatcher) jsonPath("$.age").value(student.getAge()))
+                .andDo(print());
+
+    }
+
 
 
 }
