@@ -20,4 +20,10 @@ public interface StudentService {
 
     Faculty getFacultyByStudent(Long id);
 
+    int getNumberOfStudents();
+
+    int getAverageAgeOfStudents();
+
+    List<Student> getLastFiveStudents();
+
 }

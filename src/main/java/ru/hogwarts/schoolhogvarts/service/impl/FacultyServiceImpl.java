@@ -7,7 +7,6 @@ import ru.hogwarts.schoolhogvarts.repository.FacultyRepository;
 import ru.hogwarts.schoolhogvarts.service.FacultyService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {

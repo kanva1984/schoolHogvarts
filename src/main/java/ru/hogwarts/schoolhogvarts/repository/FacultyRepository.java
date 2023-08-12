@@ -3,7 +3,6 @@ package ru.hogwarts.schoolhogvarts.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.hogwarts.schoolhogvarts.model.Faculty;
-import ru.hogwarts.schoolhogvarts.model.Student;
 
 import java.util.List;
 

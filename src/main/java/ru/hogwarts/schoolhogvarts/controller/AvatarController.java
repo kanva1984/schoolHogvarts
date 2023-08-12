@@ -1,24 +1,29 @@
 package ru.hogwarts.schoolhogvarts.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.hogwarts.schoolhogvarts.model.Avatar;
+import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.schoolhogvarts.dto.AvatarDTO;
 import ru.hogwarts.schoolhogvarts.service.AvatarService;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/avatars")
 public class AvatarController {
     private  AvatarService avatarService;
 
+    public AvatarController(AvatarService avatarService) {
+        this.avatarService = avatarService;
+    }
+
+
+    @GetMapping
+    public List<AvatarDTO> getPaginatedAvatars(
+            @RequestParam int pageNumber,
+            @RequestParam int pageSize
+    ) {
+        return avatarService.getPaginatedAvatars(pageNumber, pageSize);
+
+    }
 
 
 }
