@@ -77,4 +77,10 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> getLastFiveStudents() {
         return studentRepository.getLastFiveStudents();
     }
+
+    @Override
+    public List<Student> findStudentByName(String name) {
+
+        return studentRepository.findStudentByName();
+    }
 }

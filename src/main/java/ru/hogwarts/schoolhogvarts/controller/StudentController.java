@@ -121,4 +121,10 @@ public class StudentController {
         return studentService.getLastFiveStudents();
     }
 
+    @GetMapping(value = "/name/{name}")
+    public ResponseEntity<List<Student>> findStudentByName(@PathVariable("name") String name)   {
+        List<Student> students = studentService.findStudentByName(name);
+        return ResponseEntity.ok(students);
+    }
+
 }

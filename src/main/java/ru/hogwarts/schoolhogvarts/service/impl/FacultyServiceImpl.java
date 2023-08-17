@@ -61,4 +61,9 @@ public class FacultyServiceImpl implements FacultyService {
                 .map(Faculty::getStudents)
                 .orElse(null);
     }
+
+    @Override
+    public List<Faculty> findStudentsByNameOfFacultyAndColor(String name, String color) {
+        return facultyRepository.findStudentsByNameOfFacultyAndColor(name, color);
+    }
 }

@@ -58,5 +58,11 @@ public class FacultyController {
 
         return facultyService.getStudents(id);
     }
+    @GetMapping(value = "/name_and_color/{name}")
+    public ResponseEntity<List<Faculty>> findStudentsByNameOfFacultyAndColor(@PathVariable("name") String name,
+                                                                             @PathVariable("color") String color)   {
+        List<Faculty> students = facultyService.findStudentsByNameOfFacultyAndColor(name, color);
+        return ResponseEntity.ok(students);
+    }
 
 }

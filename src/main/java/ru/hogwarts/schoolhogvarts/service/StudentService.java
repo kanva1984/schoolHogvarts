@@ -26,4 +26,6 @@ public interface StudentService {
 
     List<Student> getLastFiveStudents();
 
+    List<Student> findStudentByName(String name);
+
 }
