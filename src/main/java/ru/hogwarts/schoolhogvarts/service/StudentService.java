@@ -28,4 +28,8 @@ public interface StudentService {
 
 //    List<Student> findStudentByName(String name);
 
+    List<String> getStudentsNamesStartedFromA();
+
+    Double getAverageAge();
+
 }
