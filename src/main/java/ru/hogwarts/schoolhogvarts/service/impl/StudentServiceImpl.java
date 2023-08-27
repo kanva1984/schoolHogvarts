@@ -21,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
     }
 
+//    private final Object printNameLock = new Object();
 
     @Override
     public Student add(Student student) {
@@ -72,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Method getFacultyByStudent was invoked!");
 
         return studentRepository.findById(id)
-                .map(Student :: getFaculty)
+                .map(Student::getFaculty)
                 .orElse(null);
     }
 
@@ -117,10 +118,67 @@ public class StudentServiceImpl implements StudentService {
                 .orElse(0.0);
     }
 
+    @Override
+    public void threads() {
+        List<Student> students = studentRepository.findAll();
+
+        printName(students.get(0));
+        printName(students.get(1));
+
+        new Thread(() -> {
+            printName(students.get(2));
+            printName(students.get(3));
+        }).start();
+
+        new Thread(() -> {
+            printName(students.get(4));
+            printName(students.get(5));
+        }).start();
+
+    }
+
+    private void printName(Student student) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(student.getName());
+    }
+
+    @Override
+
+    public void threadsSync() {
+        List<Student> students = studentRepository.findAll();
+        printNameSynchronize(students.get(0));
+        printNameSynchronize(students.get(1));
+
+        new Thread(() -> {
+            printNameSynchronize(students.get(2));
+            printNameSynchronize(students.get(3));
+        }).start();
+
+        new Thread(() -> {
+            printNameSynchronize(students.get(4));
+            printNameSynchronize(students.get(5));
+        }).start();
+    }
+
+    private synchronized void printNameSynchronize(Student student) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(student.getName());
+    }
+
+
 //    @Override
 //    public List<Student> findStudentByName(String name) {
 //        logger.info("Method findStudentByName was invoked!");
 //
 //        return studentRepository.findStudentByName();
 //    }
+
 }

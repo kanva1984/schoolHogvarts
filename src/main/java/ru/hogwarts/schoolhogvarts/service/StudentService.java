@@ -32,4 +32,8 @@ public interface StudentService {
 
     Double getAverageAge();
 
+    void threads();
+
+    void threadsSync();
+
 }
